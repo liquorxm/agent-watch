@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useUIStore } from '../../stores/uiStore';
 import { useAgentStore } from '../../stores/agentStore';
 import { AgentState } from '../../types/agent';
@@ -15,6 +16,17 @@ function formatDuration(startTime: number): string {
   const m = Math.floor((s % 3600) / 60);
   const sec = s % 60;
   return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+}
+
+function ElapsedTime({ startTime }: { startTime: number }) {
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return <span className="font-mono text-xs text-gray-500">{formatDuration(startTime)}</span>;
 }
 
 export function Dashboard() {
@@ -123,7 +135,7 @@ export function Dashboard() {
                       </span>
                     </td>
                     <td className="py-2.5 px-3 font-mono text-xs text-gray-500">
-                      {formatDuration(inst.startTime)}
+                      <ElapsedTime startTime={inst.startTime} />
                     </td>
                   </tr>
                 ))}

@@ -1,7 +1,7 @@
 {
   "productName": "AgentWatch",
   "version": "0.1.0",
-  "identifier": "com.agentwatch.app",
+  "identifier": "com.agentwatch.desktop",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
