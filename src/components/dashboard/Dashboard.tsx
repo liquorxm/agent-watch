@@ -21,7 +21,7 @@ export function Dashboard() {
   const open = useUIStore((s) => s.dashboardOpen);
   const setOpen = useUIStore((s) => s.setDashboardOpen);
   const summaries = useAgentStore((s) => s.summaries);
-  const instances = Array.from(useAgentStore((s) => s.instances.values()));
+  const instances = Object.values(useAgentStore((s) => s.instances));
 
   if (!open) return null;
 

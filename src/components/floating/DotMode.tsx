@@ -7,8 +7,8 @@ const STATE_COLORS: Record<string, string> = {
   [AgentState.Error]: '#EF4444',
 };
 
-function getHighestState(instances: Map<string, { state: AgentState }>): AgentState | null {
-  const values = Array.from(instances.values());
+function getHighestState(instances: Record<string, { state: AgentState }>): AgentState | null {
+  const values = Object.values(instances);
   if (values.some((i) => i.state === AgentState.Error)) return AgentState.Error;
   if (values.some((i) => i.state === AgentState.Running)) return AgentState.Running;
   if (values.length > 0) return AgentState.Finished;

@@ -11,7 +11,7 @@ interface CompanionModeProps {
 export function CompanionMode({ onClick, onContextMenu }: CompanionModeProps) {
   const instances = useAgentStore((s) => s.instances);
   const animal = useConfigStore((s) => s.config.companionAnimal);
-  const hasRunning = Array.from(instances.values()).some(
+  const hasRunning = Object.values(instances).some(
     (i) => i.state === AgentState.Running,
   );
 
@@ -30,7 +30,7 @@ export function CompanionMode({ onClick, onContextMenu }: CompanionModeProps) {
         <p className="text-xs text-gray-400 font-mono mt-3">Idle</p>
       )}
       <p className="text-[10px] text-gray-400 font-mono mt-1">
-        {instances.size} agent{instances.size !== 1 ? 's' : ''} monitored
+        {Object.keys(instances).length} agent{Object.keys(instances).length !== 1 ? 's' : ''} monitored
       </p>
     </div>
   );

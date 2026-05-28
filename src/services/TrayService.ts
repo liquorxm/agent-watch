@@ -17,13 +17,13 @@ export class TrayService {
 
   private updateTray(): void {
     const instances = useAgentStore.getState().instances;
-    if (instances.size === 0) {
+    if (Object.keys(instances).length === 0) {
       this.updateTrayIcon(null, 'AgentWatch - No agents running');
       return;
     }
 
     let highestState: AgentState | null = null;
-    for (const inst of instances.values()) {
+    for (const inst of Object.values(instances)) {
       if (inst.state === AgentState.Error) {
         highestState = AgentState.Error;
         break;
