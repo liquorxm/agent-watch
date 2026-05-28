@@ -27,9 +27,8 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
 function AppContent() {
   useAgentWatch();
 
-  const dashboardOpen = useUIStore((s) => s.dashboardOpen);
+  const settingsOpen = useUIStore((s) => s.settingsOpen);
   const config = useConfigStore((s) => s.config);
-
   const isDark = config.theme === 'oled';
 
   return (
@@ -37,13 +36,13 @@ function AppContent() {
       <FloatingWidget />
       <Dashboard />
 
-      {dashboardOpen && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
+      {settingsOpen && (
+        <div className="fixed inset-0 z-[10001] flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
           <div className="rounded-2xl shadow-2xl w-[700px] max-h-[80vh] overflow-auto p-6" style={isDark ? { background: '#0f1014', border: '1px solid rgba(255,255,255,0.1)' } : { background: '#fff', border: '1px solid rgba(0,0,0,0.1)' }}>
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-[15px] font-semibold">Settings</h2>
               <button
-                onClick={() => useUIStore.getState().setDashboardOpen(false)}
+                onClick={() => useUIStore.getState().setSettingsOpen(false)}
                 className="text-gray-400 hover:text-gray-600 text-xl leading-none"
               >
                 ×

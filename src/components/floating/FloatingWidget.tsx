@@ -80,6 +80,7 @@ export function FloatingWidget() {
 function ContextMenu({ x, y, onClose }: { x: number; y: number; onClose: () => void }) {
   const setWidgetMode = useConfigStore((s) => s.setWidgetMode);
   const toggleDashboard = useUIStore((s) => s.toggleDashboard);
+  const setSettingsOpen = useUIStore((s) => s.setSettingsOpen);
 
   const items = [
     { label: 'Dot Mode', action: () => setWidgetMode('dot') },
@@ -87,6 +88,7 @@ function ContextMenu({ x, y, onClose }: { x: number; y: number; onClose: () => v
     { label: 'Companion', action: () => setWidgetMode('companion') },
     { label: '---', action: () => {} },
     { label: 'Dashboard', action: () => toggleDashboard() },
+    { label: 'Settings', action: () => setSettingsOpen(true) },
     { label: '---', action: () => {} },
     { label: 'Quit', action: () => {} },
   ];

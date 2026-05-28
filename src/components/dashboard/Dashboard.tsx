@@ -20,6 +20,7 @@ function formatDuration(startTime: number): string {
 export function Dashboard() {
   const open = useUIStore((s) => s.dashboardOpen);
   const setOpen = useUIStore((s) => s.setDashboardOpen);
+  const setSettingsOpen = useUIStore((s) => s.setSettingsOpen);
   const summaries = useAgentStore((s) => s.summaries);
   const instances = Object.values(useAgentStore((s) => s.instances));
 
@@ -32,12 +33,21 @@ export function Dashboard() {
           <h2 className="text-[15px] font-semibold font-display text-[#EDEDEF]">
             agent-watch — overview
           </h2>
-          <button
-            onClick={() => setOpen(false)}
-            className="text-gray-400 hover:text-white text-xl leading-none"
-          >
-            ×
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => { setOpen(false); setSettingsOpen(true); }}
+              className="text-gray-400 hover:text-white text-sm"
+              title="Settings"
+            >
+              ⚙
+            </button>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-gray-400 hover:text-white text-xl leading-none"
+            >
+              ×
+            </button>
+          </div>
         </div>
 
         {summaries.length === 0 ? (
