@@ -1,4 +1,5 @@
-import { AgentDefinition } from './agent';
+import type { AgentDefinition } from './agent';
+export type { AgentDefinition };
 
 export type WidgetMode = 'dot' | 'card' | 'companion';
 export type ThemeMode = 'oled' | 'light';
