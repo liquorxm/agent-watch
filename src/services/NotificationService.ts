@@ -1,3 +1,4 @@
+import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/plugin-notification';
 import { EventBus } from '../core/EventBus';
 import { EventType, NotificationRequestedEvent } from '../types/events';
 import { AgentState } from '../types/agent';
@@ -13,9 +14,15 @@ export class NotificationService {
   }
 
   private async init(): Promise<void> {
-    if ('Notification' in window) {
-      const permission = await Notification.requestPermission();
-      this.granted = permission === 'granted';
+    try {
+      let permitted = await isPermissionGranted();
+      if (!permitted) {
+        const result = await requestPermission();
+        permitted = result === 'granted';
+      }
+      this.granted = permitted;
+    } catch {
+      this.granted = false;
     }
 
     this.bus.on(EventType.NotificationRequested, (event: NotificationRequestedEvent) => {
@@ -35,6 +42,6 @@ export class NotificationService {
 
     const body = event.message ?? `${agentName} instance ${event.instanceId} changed to ${event.state}`;
 
-    new Notification(title, { body });
+    sendNotification({ title, body }).catch(() => {});
   }
 }

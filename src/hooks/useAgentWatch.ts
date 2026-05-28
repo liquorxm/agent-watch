@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+import { emit, listen } from '@tauri-apps/api/event';
+import { invoke } from '@tauri-apps/api/core';
 import { EventBus } from '../core/EventBus';
 import { ProcessWatcher } from '../core/ProcessWatcher';
 import { AgentMatcher } from '../core/AgentMatcher';
@@ -9,12 +11,12 @@ import { NotificationService } from '../services/NotificationService';
 import { TrayService } from '../services/TrayService';
 import { useAgentStore } from '../stores/agentStore';
 import { useConfigStore } from '../stores/configStore';
+import { useUIStore } from '../stores/uiStore';
 import { ProcessInfo, AgentState } from '../types/agent';
 import { EventType, AgentDetectedEvent, AgentRemovedEvent, StateChangedEvent } from '../types/events';
 
 async function syncToWidget() {
   try {
-    const { emit } = await import('@tauri-apps/api/event');
     await emit('agent-state-sync', {
       instances: useAgentStore.getState().instances,
       summaries: useAgentStore.getState().summaries,
@@ -47,16 +49,11 @@ export function useAgentWatch() {
       matcher,
       registry,
       async (): Promise<ProcessInfo[]> => {
-        try {
-          const { invoke } = await import('@tauri-apps/api/core');
-          const raw: string[] = await invoke('get_processes');
-          return raw.map((line) => {
-            const [pid, name, command] = line.split('|');
-            return { pid: parseInt(pid), name, command, ppid: 0 };
-          });
-        } catch {
-          return [];
-        }
+        const raw: string[] = await invoke('get_processes');
+        return raw.map((line) => {
+          const [pid, name, command] = line.split('|');
+          return { pid: parseInt(pid), name, command, ppid: 0 };
+        });
       },
       3000,
     );
@@ -105,6 +102,11 @@ export function useAgentWatch() {
     });
 
     processWatcher.start();
+
+    // Listen for widget events
+    listen('open-dashboard', () => {
+      useUIStore.getState().setDashboardOpen(true);
+    }).catch(() => {});
 
     return () => {
       processWatcher.stop();

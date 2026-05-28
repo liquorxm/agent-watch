@@ -1,75 +1,47 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback } from 'react';
+import { emit } from '@tauri-apps/api/event';
+import { invoke } from '@tauri-apps/api/core';
 import { useConfigStore } from '../../stores/configStore';
-import { useUIStore } from '../../stores/uiStore';
 import { DotMode } from './DotMode';
 import { CardMode } from './CardMode';
 import { CompanionMode } from './CompanionMode';
 
-interface Position {
-  x: number;
-  y: number;
-}
-
 export function FloatingWidget() {
   const widgetMode = useConfigStore((s) => s.config.widgetMode);
   const setWidgetMode = useConfigStore((s) => s.setWidgetMode);
-  const toggleDashboard = useUIStore((s) => s.toggleDashboard);
-  const visible = useUIStore((s) => s.widgetVisible);
-
-  const [pos, setPos] = useState<Position>({ x: window.innerWidth - 60, y: 80 });
-  const [dragging, setDragging] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const dragRef = useRef({ offsetX: 0, offsetY: 0 });
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      setDragging(true);
-      dragRef.current = { offsetX: e.clientX - pos.x, offsetY: e.clientY - pos.y };
-    },
-    [pos],
-  );
-
-  useEffect(() => {
-    if (!dragging) return;
-    const handleMouseMove = (e: MouseEvent) => {
-      setPos({ x: e.clientX - dragRef.current.offsetX, y: e.clientY - dragRef.current.offsetY });
-    };
-    const handleMouseUp = () => setDragging(false);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [dragging]);
+  const openMainDashboard = useCallback(() => {
+    emit('open-dashboard', {}).catch(() => {});
+  }, []);
 
   const handleClick = useCallback(() => {
-    if (dragging) return;
     if (widgetMode === 'dot') {
       setWidgetMode('card');
     } else {
-      toggleDashboard();
+      openMainDashboard();
     }
-  }, [dragging, widgetMode, setWidgetMode, toggleDashboard]);
+  }, [widgetMode, setWidgetMode, openMainDashboard]);
 
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     setMenuOpen(true);
   }, []);
 
-  if (!visible) return null;
-
   return (
-    <div className="fixed z-[9999] select-none" style={{ left: pos.x, top: pos.y }}>
-      <div onMouseDown={handleMouseDown}>
+    <div
+      className="fixed inset-0 select-none flex items-center justify-center"
+      data-tauri-drag-region
+    >
+      <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
         {widgetMode === 'dot' && <DotMode onClick={handleClick} onContextMenu={handleContextMenu} />}
         {widgetMode === 'card' && <CardMode onClick={handleClick} onContextMenu={handleContextMenu} />}
         {widgetMode === 'companion' && <CompanionMode onClick={handleClick} onContextMenu={handleContextMenu} />}
       </div>
       {menuOpen && (
         <ContextMenu
-          x={pos.x}
-          y={pos.y + 40}
+          x={80}
+          y={20}
           onClose={() => setMenuOpen(false)}
         />
       )}
@@ -79,18 +51,19 @@ export function FloatingWidget() {
 
 function ContextMenu({ x, y, onClose }: { x: number; y: number; onClose: () => void }) {
   const setWidgetMode = useConfigStore((s) => s.setWidgetMode);
-  const toggleDashboard = useUIStore((s) => s.toggleDashboard);
-  const setSettingsOpen = useUIStore((s) => s.setSettingsOpen);
+
+  const openDashboard = () => {
+    emit('open-dashboard', {}).catch(() => {});
+  };
 
   const items = [
     { label: 'Dot Mode', action: () => setWidgetMode('dot') },
     { label: 'Card Mode', action: () => setWidgetMode('card') },
     { label: 'Companion', action: () => setWidgetMode('companion') },
     { label: '---', action: () => {} },
-    { label: 'Dashboard', action: () => toggleDashboard() },
-    { label: 'Settings', action: () => setSettingsOpen(true) },
+    { label: 'Dashboard', action: () => openDashboard() },
     { label: '---', action: () => {} },
-    { label: 'Quit', action: () => {} },
+    { label: 'Quit', action: () => { invoke('quit_app').catch(() => {}); } },
   ];
 
   return (
@@ -107,10 +80,7 @@ function ContextMenu({ x, y, onClose }: { x: number; y: number; onClose: () => v
             <button
               key={i}
               className="w-full text-left px-3 py-1.5 text-xs hover:bg-black/5 dark:hover:bg-white/5 font-mono"
-              onClick={() => {
-                item.action();
-                onClose();
-              }}
+              onClick={() => { item.action(); onClose(); }}
             >
               {item.label}
             </button>

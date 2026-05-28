@@ -1,4 +1,5 @@
 import { Component, type ReactNode } from 'react';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 import { useAgentWatch } from './hooks/useAgentWatch';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { Settings } from './components/dashboard/Settings';
@@ -23,6 +24,52 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
   }
 }
 
+function TitleBar({ isDark }: { isDark: boolean }) {
+  const handleClose = () => {
+    getCurrentWindow().close().catch(() => {});
+  };
+
+  const handleMinimize = () => {
+    getCurrentWindow().minimize().catch(() => {});
+  };
+
+  return (
+    <div
+      className="flex items-center justify-between px-4 h-9 select-none"
+      style={{
+        WebkitAppRegion: 'drag',
+        background: isDark ? '#0a0a0c' : '#e8e8ec',
+        borderBottom: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(0,0,0,0.08)',
+      } as React.CSSProperties}
+    >
+      <div className="flex items-center gap-2">
+        <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#22C55E', boxShadow: '0 0 6px rgba(34,197,94,0.3)' }} />
+        <span className="text-xs font-semibold font-mono tracking-wide" style={{ color: isDark ? '#8A8F98' : '#6B7280' }}>
+          agent-watch
+        </span>
+      </div>
+      <div className="flex gap-2" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
+        <button
+          onClick={handleMinimize}
+          className="w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-white/10 transition-colors"
+          style={{ color: isDark ? '#8A8F98' : '#6B7280' }}
+          title="Minimize"
+        >
+          −
+        </button>
+        <button
+          onClick={handleClose}
+          className="w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-red-500/20 hover:text-red-400 transition-colors"
+          style={{ color: isDark ? '#8A8F98' : '#6B7280' }}
+          title="Close"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function AppContent() {
   useAgentWatch();
 
@@ -31,7 +78,8 @@ function AppContent() {
   const isDark = config.theme === 'oled';
 
   return (
-    <div className={isDark ? 'dark' : ''} style={isDark ? { background: '#0d1117', color: '#F0F2F5', minHeight: '100vh' } : { background: '#f5f5f7', color: '#1a1a2e', minHeight: '100vh' }}>
+    <div className={isDark ? 'dark' : ''} style={isDark ? { background: '#0d1117', color: '#F0F2F5', minHeight: '100vh', borderRadius: '10px', overflow: 'hidden' } : { background: '#f5f5f7', color: '#1a1a2e', minHeight: '100vh', borderRadius: '10px', overflow: 'hidden' }}>
+      <TitleBar isDark={isDark} />
       <Dashboard />
 
       {settingsOpen && (

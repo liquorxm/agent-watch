@@ -9,13 +9,15 @@
     "beforeBuildCommand": "npm run build"
   },
   "app": {
+    "macOSPrivateApi": true,
     "windows": [
       {
         "title": "AgentWatch",
         "width": 800,
         "height": 600,
         "visible": true,
-        "decorations": true,
+        "decorations": false,
+        "transparent": true,
         "center": true
       }
     ],

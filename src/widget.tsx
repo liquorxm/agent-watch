@@ -1,40 +1,36 @@
 import { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import { listen } from '@tauri-apps/api/event';
+import './index.css';
 import { FloatingWidget } from './components/floating/FloatingWidget';
 import { useAgentStore } from './stores/agentStore';
 import { useConfigStore } from './stores/configStore';
-import { AgentState } from './types/agent';
 import type { AgentInstance, AgentSummary } from './types/agent';
 
 function WidgetApp() {
   useEffect(() => {
-    let unlisten: (() => void) | undefined;
+    let unlisten1: (() => void) | undefined;
+    let unlisten2: (() => void) | undefined;
 
     async function setupListener() {
-      try {
-        const { listen } = await import('@tauri-apps/api/event');
+      unlisten1 = await listen<{ instances: Record<string, AgentInstance>; summaries: AgentSummary[] }>(
+        'agent-state-sync',
+        (event) => {
+          useAgentStore.setState({ instances: event.payload.instances });
+          useAgentStore.setState({ summaries: event.payload.summaries });
+        },
+      );
 
-        unlisten = await listen<{ instances: Record<string, AgentInstance>; summaries: AgentSummary[] }>(
-          'agent-state-sync',
-          (event) => {
-            useAgentStore.setState({ instances: event.payload.instances });
-            useAgentStore.setState({ summaries: event.payload.summaries });
-          },
-        );
-
-        await listen<{ config: ReturnType<typeof useConfigStore.getState>['config'] }>(
-          'config-sync',
-          (event) => {
-            useConfigStore.setState({ config: event.payload.config });
-          },
-        );
-      } catch {
-        // Not in Tauri environment, use local store directly
-      }
+      unlisten2 = await listen<{ config: ReturnType<typeof useConfigStore.getState>['config'] }>(
+        'config-sync',
+        (event) => {
+          useConfigStore.setState({ config: event.payload.config });
+        },
+      );
     }
 
     setupListener();
-    return () => { unlisten?.(); };
+    return () => { unlisten1?.(); unlisten2?.(); };
   }, []);
 
   return <FloatingWidget />;
