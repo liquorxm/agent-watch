@@ -39,8 +39,8 @@ export function Dashboard() {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/50">
-      <div className="bg-[#0f1014] border border-white/10 rounded-2xl shadow-2xl w-[700px] max-h-[80vh] overflow-auto p-6">
+    <div className="p-6">
+      <div className="rounded-2xl w-full max-h-[80vh] overflow-auto">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-[15px] font-semibold font-display text-[#EDEDEF]">
             agent-watch — overview
@@ -52,12 +52,6 @@ export function Dashboard() {
               title="Settings"
             >
               ⚙
-            </button>
-            <button
-              onClick={() => setOpen(false)}
-              className="text-gray-400 hover:text-white text-xl leading-none"
-            >
-              ×
             </button>
           </div>
         </div>

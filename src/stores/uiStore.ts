@@ -16,7 +16,7 @@ interface UIStore {
 }
 
 export const useUIStore = create<UIStore>((set) => ({
-  dashboardOpen: false,
+  dashboardOpen: true,
   settingsOpen: false,
   widgetVisible: true,
 
