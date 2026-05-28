@@ -10,6 +10,10 @@ interface AgentStore {
   updateSummaries: (summaries: AgentSummary[]) => void;
 }
 
+if (import.meta.hot) {
+  import.meta.hot.accept();
+}
+
 export const useAgentStore = create<AgentStore>((set) => ({
   instances: {},
   summaries: [],

@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import { AppConfig, DEFAULT_CONFIG, WidgetMode, ThemeMode, CompanionAnimal } from '../types/config';
 
+if (import.meta.hot) {
+  import.meta.hot.accept();
+}
+
 interface ConfigStore {
   config: AppConfig;
   setConfig: (config: AppConfig) => void;

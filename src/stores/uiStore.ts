@@ -1,5 +1,9 @@
 import { create } from 'zustand';
 
+if (import.meta.hot) {
+  import.meta.hot.accept();
+}
+
 interface UIStore {
   dashboardOpen: boolean;
   settingsOpen: boolean;
