@@ -47,6 +47,8 @@ export class TrayService {
   }
 
   private updateTrayIcon(color: string | null, tooltip: string): void {
+    void color;
+    void tooltip;
     // Platform-specific tray icon update via Tauri API
     // For MVP, this is wired through the Tauri tray handle in main.rs
     // The frontend emits events; the Rust backend handles icon rendering

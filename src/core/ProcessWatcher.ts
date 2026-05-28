@@ -1,4 +1,4 @@
-import { ProcessInfo } from '../types/agent';
+import { AgentState, ProcessInfo } from '../types/agent';
 import { EventBus } from './EventBus';
 import { AgentMatcher } from './AgentMatcher';
 import { AgentRegistry } from './AgentRegistry';
@@ -51,7 +51,7 @@ export class ProcessWatcher {
             id: instanceId,
             pid: proc.pid,
             agentType,
-            state: 'running' as any,
+            state: AgentState.Running,
             startTime: Date.now(),
             lastUpdateTime: Date.now(),
           });
@@ -70,12 +70,16 @@ export class ProcessWatcher {
         for (const pid of pids) {
           if (!current?.has(pid)) {
             const instanceId = `${agentType}-${pid}`;
+            const instance = this.registry.find(instanceId);
+            const previousState = instance?.state ?? AgentState.Running;
             this.registry.remove(instanceId);
 
             const event: AgentRemovedEvent = {
               type: EventType.AgentRemoved,
               instanceId,
               pid,
+              agentType: instance?.agentType ?? agentType,
+              previousState,
             };
             this.bus.emit(EventType.AgentRemoved, event);
           }

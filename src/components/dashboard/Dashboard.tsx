@@ -9,8 +9,8 @@ const STATE_LABELS: Record<string, string> = {
   [AgentState.Error]: 'error',
 };
 
-function formatDuration(startTime: number): string {
-  const diff = Date.now() - startTime;
+function formatDuration(startTime: number, now: number): string {
+  const diff = now - startTime;
   const s = Math.floor(diff / 1000);
   const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);
@@ -19,19 +19,18 @@ function formatDuration(startTime: number): string {
 }
 
 function ElapsedTime({ startTime }: { startTime: number }) {
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  return <span className="font-mono text-xs text-gray-500">{formatDuration(startTime)}</span>;
+  return <span className="font-mono text-xs text-gray-500">{formatDuration(startTime, now)}</span>;
 }
 
 export function Dashboard() {
   const open = useUIStore((s) => s.dashboardOpen);
-  const setOpen = useUIStore((s) => s.setDashboardOpen);
   const setSettingsOpen = useUIStore((s) => s.setSettingsOpen);
   const summaries = useAgentStore((s) => s.summaries);
   const instances = Object.values(useAgentStore((s) => s.instances));
@@ -47,7 +46,7 @@ export function Dashboard() {
           </h2>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => { setOpen(false); setSettingsOpen(true); }}
+              onClick={() => setSettingsOpen(true)}
               className="text-gray-400 hover:text-white text-sm"
               title="Settings"
             >

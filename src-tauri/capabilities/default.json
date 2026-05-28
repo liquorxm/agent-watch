@@ -4,10 +4,13 @@
   "description": "enables the default permissions",
   "windows": [
     "main",
-    "widget"
+    "widget",
+    "dashboard"
   ],
   "permissions": [
     "core:default",
-    "notification:default"
+    "notification:default",
+    "core:window:allow-set-size",
+    "core:window:allow-start-dragging"
   ]
 }

@@ -33,3 +33,37 @@ export const useConfigStore = create<ConfigStore>((set) => ({
       config: { ...state.config, companionAnimal: animal },
     })),
 }));
+
+// ---- Persistence helpers ----
+
+let saveTimer: ReturnType<typeof setTimeout> | null = null;
+
+async function persistConfig(config: AppConfig): Promise<void> {
+  try {
+    const { invoke } = await import('@tauri-apps/api/core');
+    await invoke('save_config', { config: JSON.stringify(config, null, 2) });
+  } catch {
+    // Not in Tauri environment or write failed -- silently ignore
+  }
+}
+
+export async function loadInitialConfig(): Promise<void> {
+  try {
+    const { invoke } = await import('@tauri-apps/api/core');
+    const raw = await invoke<string>('load_config');
+    const saved = JSON.parse(raw);
+    const merged: AppConfig = { ...DEFAULT_CONFIG, ...saved, configVersion: DEFAULT_CONFIG.configVersion };
+    useConfigStore.getState().setConfig(merged);
+  } catch {
+    // No saved config or error -- use defaults already in store
+  }
+}
+
+// Auto-save on any config change (debounced 500ms)
+useConfigStore.subscribe((state, prevState) => {
+  if (state.config === prevState.config) return;
+  if (saveTimer !== null) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    persistConfig(state.config);
+  }, 500);
+});

@@ -1,30 +1,30 @@
-type Listener = (...args: any[]) => void;
+type Listener<T = unknown> = (payload: T) => void;
 
 export class EventBus {
-  private listeners: Map<string, Set<Listener>> = new Map();
+  private listeners: Map<string, Set<Listener<unknown>>> = new Map();
 
-  on(event: string, listener: Listener): void {
+  on<T>(event: string, listener: Listener<T>): void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
-    this.listeners.get(event)!.add(listener);
+    this.listeners.get(event)!.add(listener as Listener<unknown>);
   }
 
-  off(event: string, listener: Listener): void {
-    this.listeners.get(event)?.delete(listener);
+  off<T>(event: string, listener: Listener<T>): void {
+    this.listeners.get(event)?.delete(listener as Listener<unknown>);
   }
 
-  once(event: string, listener: Listener): void {
-    const wrapper = (...args: any[]) => {
+  once<T>(event: string, listener: Listener<T>): void {
+    const wrapper = (payload: T) => {
       this.off(event, wrapper);
-      listener(...args);
+      listener(payload);
     };
     this.on(event, wrapper);
   }
 
-  emit(event: string, ...args: any[]): void {
+  emit<T>(event: string, payload: T): void {
     this.listeners.get(event)?.forEach((listener) => {
-      listener(...args);
+      listener(payload);
     });
   }
 

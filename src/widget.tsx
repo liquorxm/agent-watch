@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { listen } from '@tauri-apps/api/event';
@@ -29,7 +30,7 @@ function WidgetApp() {
       );
     }
 
-    setupListener();
+    setupListener().catch(() => {});
     return () => { unlisten1?.(); unlisten2?.(); };
   }, []);
 

@@ -6,6 +6,7 @@ import { DEFAULT_NOTIFICATION_THROTTLE, NotificationThrottleConfig } from '../ty
 interface PendingTransition {
   instanceId: string;
   newState: AgentState;
+  exitCode?: number;
   timer: ReturnType<typeof setTimeout>;
 }
 
@@ -45,7 +46,7 @@ export class StateEngine {
       this.confirmTransition(instanceId);
     }, this.throttle.debounceMs);
 
-    this.pendingTransitions.set(instanceId, { instanceId, newState, timer });
+    this.pendingTransitions.set(instanceId, { instanceId, newState, exitCode, timer });
   }
 
   confirmTransition(instanceId: string): void {
@@ -60,6 +61,7 @@ export class StateEngine {
       instanceId,
       previousState,
       newState: pending.newState,
+      exitCode: pending.exitCode,
     });
 
     if (

@@ -1,4 +1,4 @@
-import { AgentInstance, AgentState, ProcessInfo } from './agent';
+import { AgentState, ProcessInfo } from './agent';
 
 export enum EventType {
   AgentDetected = 'agent:detected',
@@ -18,6 +18,8 @@ export interface AgentRemovedEvent {
   type: EventType.AgentRemoved;
   instanceId: string;
   pid: number;
+  agentType: string;
+  previousState: AgentState;
 }
 
 export interface StateChangedEvent {

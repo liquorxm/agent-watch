@@ -42,6 +42,6 @@ export class NotificationService {
 
     const body = event.message ?? `${agentName} instance ${event.instanceId} changed to ${event.state}`;
 
-    sendNotification({ title, body }).catch(() => {});
+    sendNotification({ title, body });
   }
 }
