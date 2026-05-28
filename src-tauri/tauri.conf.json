@@ -14,8 +14,9 @@
         "title": "AgentWatch",
         "width": 800,
         "height": 600,
-        "visible": false,
-        "decorations": true
+        "visible": true,
+        "decorations": true,
+        "center": true
       }
     ],
     "trayIcon": {

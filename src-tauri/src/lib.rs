@@ -1,4 +1,4 @@
-use tauri::Manager;
+use std::ffi::OsStr;
 
 #[tauri::command]
 fn get_processes() -> Vec<String> {
@@ -7,7 +7,7 @@ fn get_processes() -> Vec<String> {
     sys.refresh_all();
     for (pid, process) in sys.processes() {
         let name = process.name().to_string_lossy().to_string();
-        let cmd = process.cmd().join(" ");
+        let cmd = process.cmd().join(OsStr::new(" ")).to_string_lossy().to_string();
         processes.push(format!("{}|{}|{}", pid, name, cmd));
     }
     processes

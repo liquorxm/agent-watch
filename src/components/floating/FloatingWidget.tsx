@@ -16,7 +16,7 @@ export function FloatingWidget() {
   const toggleDashboard = useUIStore((s) => s.toggleDashboard);
   const visible = useUIStore((s) => s.widgetVisible);
 
-  const [pos, setPos] = useState<Position>({ x: window.screen.width - 80, y: 120 });
+  const [pos, setPos] = useState<Position>({ x: window.innerWidth - 60, y: 80 });
   const [dragging, setDragging] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const dragRef = useRef({ offsetX: 0, offsetY: 0 });
