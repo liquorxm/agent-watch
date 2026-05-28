@@ -1,6 +1,5 @@
 import { Component, type ReactNode } from 'react';
 import { useAgentWatch } from './hooks/useAgentWatch';
-import { FloatingWidget } from './components/floating/FloatingWidget';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { Settings } from './components/dashboard/Settings';
 import { useUIStore } from './stores/uiStore';
@@ -33,7 +32,6 @@ function AppContent() {
 
   return (
     <div className={isDark ? 'dark' : ''} style={isDark ? { background: '#0d1117', color: '#F0F2F5', minHeight: '100vh' } : { background: '#f5f5f7', color: '#1a1a2e', minHeight: '100vh' }}>
-      <FloatingWidget />
       <Dashboard />
 
       {settingsOpen && (

@@ -12,6 +12,21 @@ import { useConfigStore } from '../stores/configStore';
 import { ProcessInfo, AgentState } from '../types/agent';
 import { EventType, AgentDetectedEvent, AgentRemovedEvent, StateChangedEvent } from '../types/events';
 
+async function syncToWidget() {
+  try {
+    const { emit } = await import('@tauri-apps/api/event');
+    await emit('agent-state-sync', {
+      instances: useAgentStore.getState().instances,
+      summaries: useAgentStore.getState().summaries,
+    });
+    await emit('config-sync', {
+      config: useConfigStore.getState().config,
+    });
+  } catch {
+    // Not in Tauri environment
+  }
+}
+
 export function useAgentWatch() {
   const initialized = useRef(false);
 
@@ -56,6 +71,7 @@ export function useAgentWatch() {
         lastUpdateTime: Date.now(),
       });
       useAgentStore.getState().updateSummaries(registry.getSummaries());
+      syncToWidget();
     });
 
     bus.on(EventType.AgentRemoved, (event: AgentRemovedEvent) => {
@@ -74,15 +90,18 @@ export function useAgentWatch() {
       useAgentStore.getState().removeInstance(event.instanceId);
       stateEngine.removeInstance(event.instanceId);
       useAgentStore.getState().updateSummaries(registry.getSummaries());
+      syncToWidget();
     });
 
     bus.on(EventType.StateChanged, (event: StateChangedEvent) => {
       useAgentStore.getState().updateState(event.instanceId, event.newState);
+      syncToWidget();
     });
 
     bus.on(EventType.ConfigUpdated, (newConfig: any) => {
       useConfigStore.getState().setConfig(newConfig);
       matcher.setAgents(newConfig.agents);
+      syncToWidget();
     });
 
     processWatcher.start();

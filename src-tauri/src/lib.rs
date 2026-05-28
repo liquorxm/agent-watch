@@ -18,6 +18,23 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![get_processes])
+        .setup(|app| {
+            let _widget = tauri::WebviewWindowBuilder::new(
+                app,
+                "widget",
+                tauri::WebviewUrl::App("widget.html".into()),
+            )
+            .title("AgentWatch Widget")
+            .inner_size(300.0, 200.0)
+            .decorations(false)
+            .always_on_top(true)
+            .visible_on_all_workspaces(true)
+            .skip_taskbar(true)
+            .resizable(false)
+            .build()?;
+
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
