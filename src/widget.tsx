@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { listen } from '@tauri-apps/api/event';
+import { emit, listen } from '@tauri-apps/api/event';
 import './index.css';
 import { FloatingWidget } from './components/floating/FloatingWidget';
 import { useAgentStore } from './stores/agentStore';
@@ -28,13 +28,21 @@ function WidgetApp() {
           useConfigStore.setState({ config: event.payload.config });
         },
       );
+
+      emit('request-sync').catch(() => {});
     }
 
     setupListener().catch(() => {});
     return () => { unlisten1?.(); unlisten2?.(); };
   }, []);
 
-  return <FloatingWidget />;
+  const isDark = useConfigStore((s) => s.config.theme === 'oled');
+
+  return (
+    <div className={isDark ? 'dark' : ''}>
+      <FloatingWidget />
+    </div>
+  );
 }
 
 createRoot(document.getElementById('root')!).render(<WidgetApp />);

@@ -19,7 +19,7 @@ export function Settings() {
   return (
     <div className="space-y-6">
       <section>
-        <h3 className="font-mono text-[10px] text-gray-500 uppercase tracking-wider mb-2.5">
+        <h3 className="font-mono text-[10px] text-[var(--aw-text-muted)] uppercase tracking-wider mb-2.5">
           widget mode
         </h3>
         <div className="flex gap-1.5">
@@ -27,10 +27,10 @@ export function Settings() {
             <button
               key={mode}
               onClick={() => setWidgetMode(mode)}
-              className={`px-4 py-1.5 rounded text-[11px] font-mono border transition-colors ${
+              className={`px-4 py-1.5 rounded text-[11px] font-mono border transition-colors capitalize ${
                 config.widgetMode === mode
                   ? 'bg-blue-500 border-blue-500 text-white'
-                  : 'bg-[#0a0a0c] border-white/5 text-gray-400 hover:border-white/10'
+                  : 'bg-[var(--aw-bg-elevated)] border-[var(--aw-border-subtle)] text-[var(--aw-text-secondary)] hover:border-[var(--aw-border)]'
               }`}
             >
               {mode}
@@ -40,7 +40,7 @@ export function Settings() {
       </section>
 
       <section>
-        <h3 className="font-mono text-[10px] text-gray-500 uppercase tracking-wider mb-2.5">
+        <h3 className="font-mono text-[10px] text-[var(--aw-text-muted)] uppercase tracking-wider mb-2.5">
           companion
         </h3>
         <div className="flex flex-wrap gap-1.5">
@@ -51,7 +51,7 @@ export function Settings() {
               className={`px-3 py-1.5 rounded text-[11px] font-mono border transition-colors ${
                 config.companionAnimal === opt.value
                   ? 'bg-blue-500 border-blue-500 text-white'
-                  : 'bg-[#0a0a0c] border-white/5 text-gray-400 hover:border-white/10'
+                  : 'bg-[var(--aw-bg-elevated)] border-[var(--aw-border-subtle)] text-[var(--aw-text-secondary)] hover:border-[var(--aw-border)]'
               }`}
             >
               {opt.label}
@@ -61,7 +61,7 @@ export function Settings() {
       </section>
 
       <section>
-        <h3 className="font-mono text-[10px] text-gray-500 uppercase tracking-wider mb-2.5">
+        <h3 className="font-mono text-[10px] text-[var(--aw-text-muted)] uppercase tracking-wider mb-2.5">
           theme
         </h3>
         <div className="flex gap-1.5">
@@ -72,7 +72,7 @@ export function Settings() {
               className={`px-4 py-1.5 rounded text-[11px] font-mono border transition-colors capitalize ${
                 config.theme === theme
                   ? 'bg-blue-500 border-blue-500 text-white'
-                  : 'bg-[#0a0a0c] border-white/5 text-gray-400 hover:border-white/10'
+                  : 'bg-[var(--aw-bg-elevated)] border-[var(--aw-border-subtle)] text-[var(--aw-text-secondary)] hover:border-[var(--aw-border)]'
               }`}
             >
               {theme}
@@ -82,12 +82,12 @@ export function Settings() {
       </section>
 
       <section>
-        <h3 className="font-mono text-[10px] text-gray-500 uppercase tracking-wider mb-2.5">
+        <h3 className="font-mono text-[10px] text-[var(--aw-text-muted)] uppercase tracking-wider mb-2.5">
           notifications
         </h3>
         <div className="space-y-2">
           <label className="flex items-center justify-between py-2">
-            <span className="text-[13px] text-gray-300">error notifications</span>
+            <span className="text-[13px] text-[var(--aw-text-secondary)]">error notifications</span>
             <input
               type="checkbox"
               checked={config.notifications.error}
@@ -100,7 +100,7 @@ export function Settings() {
             />
           </label>
           <label className="flex items-center justify-between py-2">
-            <span className="text-[13px] text-gray-300">finished notifications</span>
+            <span className="text-[13px] text-[var(--aw-text-secondary)]">finished notifications</span>
             <input
               type="checkbox"
               checked={config.notifications.finished}
@@ -116,11 +116,11 @@ export function Settings() {
       </section>
 
       <section>
-        <h3 className="font-mono text-[10px] text-gray-500 uppercase tracking-wider mb-2.5">
+        <h3 className="font-mono text-[10px] text-[var(--aw-text-muted)] uppercase tracking-wider mb-2.5">
           general
         </h3>
         <label className="flex items-center justify-between py-2">
-          <span className="text-[13px] text-gray-300">launch on startup</span>
+          <span className="text-[13px] text-[var(--aw-text-secondary)]">launch on startup</span>
           <input
             type="checkbox"
             checked={config.startup}

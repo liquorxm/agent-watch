@@ -48,8 +48,8 @@ export const DEFAULT_AGENTS: AgentDefinition[] = [
   {
     id: 'codex',
     name: 'Codex',
-    patterns: ['codex'],
-    matchStrategy: 'hybrid',
+    patterns: ['--listen', '--session-id'],
+    matchStrategy: 'command',
   },
 ];
 

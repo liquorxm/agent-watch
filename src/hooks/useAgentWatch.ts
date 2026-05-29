@@ -113,20 +113,28 @@ export function useAgentWatch() {
     processWatcher.start();
 
     let unlistenSync: (() => void) | undefined;
+    let unlistenConfig: (() => void) | undefined;
+
     listen('request-sync', () => {
-      console.log('[Main] Received request-sync from another window');
       syncToWidget();
     }).then((fn) => {
       unlistenSync = fn;
-    }).catch((err) => {
-      console.error('[Main] Failed to register request-sync listener:', err);
-    });
+    }).catch(() => {});
+
+    listen<AppConfig>('config-updated', (event) => {
+      useConfigStore.getState().setConfig(event.payload);
+      matcher.setAgents(event.payload.agents);
+      syncToWidget();
+    }).then((fn) => {
+      unlistenConfig = fn;
+    }).catch(() => {});
 
     return () => {
       initialized.current = false;
       processWatcher.stop();
       bus.removeAllListeners();
       unlistenSync?.();
+      unlistenConfig?.();
     };
   }, []);
 }

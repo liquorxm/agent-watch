@@ -15,12 +15,7 @@ function getHighestState(instances: Record<string, { state: AgentState }>): Agen
   return null;
 }
 
-interface DotModeProps {
-  onClick: () => void;
-  onContextMenu: (e: React.MouseEvent) => void;
-}
-
-export function DotMode({ onClick, onContextMenu }: DotModeProps) {
+export function DotMode() {
   const instances = useAgentStore((s) => s.instances);
   const highestState = getHighestState(instances);
   const color = highestState ? STATE_COLORS[highestState] : '#5A5F68';
@@ -35,8 +30,6 @@ export function DotMode({ onClick, onContextMenu }: DotModeProps) {
             ? `0 0 16px ${color}40, 0 2px 8px rgba(0,0,0,0.3)`
             : `0 0 12px ${color}40, 0 2px 8px rgba(0,0,0,0.3)`,
       }}
-      onClick={onClick}
-      onContextMenu={onContextMenu}
     />
   );
 }

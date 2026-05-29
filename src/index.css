@@ -1,5 +1,33 @@
 @import "tailwindcss";
 
+:root {
+  --aw-bg-surface: #ffffff;
+  --aw-bg-elevated: #f0f0f2;
+  --aw-bg-card: #f8f8fa;
+  --aw-bg-deep: #050506;
+  --aw-bg-overlay: #ffffff;
+  --aw-text-primary: #1a1a2e;
+  --aw-text-secondary: #5a5a72;
+  --aw-text-muted: #9a9aae;
+  --aw-border-subtle: rgba(0,0,0,0.05);
+  --aw-border: rgba(0,0,0,0.10);
+  --aw-shadow: 0 4px 24px rgba(0,0,0,0.15);
+}
+
+.dark {
+  --aw-bg-surface: #0f1014;
+  --aw-bg-elevated: #0a0a0c;
+  --aw-bg-card: #0a0a0c;
+  --aw-bg-deep: #050506;
+  --aw-bg-overlay: #16171d;
+  --aw-text-primary: #EDEDEF;
+  --aw-text-secondary: #8A8F98;
+  --aw-text-muted: #5A5F68;
+  --aw-border-subtle: rgba(255,255,255,0.06);
+  --aw-border: rgba(255,255,255,0.10);
+  --aw-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
 html, body, #root {
   height: 100%;
   margin: 0;

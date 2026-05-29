@@ -26,7 +26,7 @@ function ElapsedTime({ startTime }: { startTime: number }) {
     return () => clearInterval(id);
   }, []);
 
-  return <span className="font-mono text-xs text-gray-500">{formatDuration(startTime, now)}</span>;
+  return <span className="font-mono text-xs">{formatDuration(startTime, now)}</span>;
 }
 
 export function Dashboard() {
@@ -38,105 +38,96 @@ export function Dashboard() {
   if (!open) return null;
 
   return (
-    <div className="p-6">
-      <div className="rounded-2xl w-full max-h-[80vh] overflow-auto">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-[15px] font-semibold font-display text-[#EDEDEF]">
-            agent-watch — overview
-          </h2>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setSettingsOpen(true)}
-              className="text-gray-400 hover:text-white text-sm"
-              title="Settings"
-            >
-              ⚙
-            </button>
-          </div>
+    <div className="p-6 overflow-auto relative min-h-full">
+      <button
+        onClick={() => setSettingsOpen(true)}
+        className="absolute top-4 right-4 text-[var(--aw-text-muted)] hover:text-[var(--aw-text-primary)] text-sm transition-colors"
+        title="Settings"
+      >
+        {'⚙'}
+      </button>
+
+      {summaries.length === 0 ? (
+        <div className="text-center py-12 text-[var(--aw-text-muted)] font-mono text-sm">
+          No agents currently running
         </div>
-
-        {summaries.length === 0 ? (
-          <div className="text-center py-12 text-gray-500 font-mono text-sm">
-            No agents currently running
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              {summaries.map((s) => (
-                <div
-                  key={s.agentType}
-                  className="bg-[#0a0a0c] border border-white/5 rounded-xl p-4"
-                >
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="font-semibold text-[15px]">{s.agentName}</span>
-                    <span className="font-mono text-[10px] text-gray-500 bg-[#050506] px-2 py-0.5 rounded-full border border-white/5">
-                      {s.instanceCount} instances
-                    </span>
-                  </div>
-                  <div className="flex gap-4">
-                    <span className="flex items-center gap-1.5 font-mono text-xs text-gray-400">
-                      <span className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_6px_rgba(59,130,246,0.4)]" />
-                      {s.runningCount} running
-                    </span>
-                    <span className="flex items-center gap-1.5 font-mono text-xs text-gray-400">
-                      <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.4)]" />
-                      {s.errorCount} error
-                    </span>
-                  </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 gap-3.5 mb-7">
+            {summaries.map((s) => (
+              <div
+                key={s.agentType}
+                className="bg-[var(--aw-bg-card)] border border-[var(--aw-border-subtle)] rounded-[10px] p-[18px_20px] cursor-pointer transition-all duration-200 hover:border-[var(--aw-border)] hover:-translate-y-px"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="font-semibold text-[15px] text-[var(--aw-text-primary)] font-display">{s.agentName}</span>
+                  <span className="font-mono text-[10px] text-[var(--aw-text-muted)] bg-[var(--aw-bg-deep)] px-2.5 py-[3px] rounded-[20px] border border-[var(--aw-border-subtle)]">
+                    {s.instanceCount} instances
+                  </span>
                 </div>
-              ))}
-            </div>
+                <div className="flex gap-4">
+                  <span className="flex items-center gap-1.5 font-mono text-xs text-[var(--aw-text-secondary)]">
+                    <span className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.25)]" />
+                    {s.runningCount} running
+                  </span>
+                  <span className="flex items-center gap-1.5 font-mono text-xs text-[var(--aw-text-secondary)]">
+                    <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.25)]" />
+                    {s.errorCount} error
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
 
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/5">
-                  <th className="text-left font-mono text-[10px] text-gray-500 uppercase tracking-wider py-3 px-3">pid</th>
-                  <th className="text-left font-mono text-[10px] text-gray-500 uppercase tracking-wider py-3 px-3">agent</th>
-                  <th className="text-left font-mono text-[10px] text-gray-500 uppercase tracking-wider py-3 px-3">status</th>
-                  <th className="text-left font-mono text-[10px] text-gray-500 uppercase tracking-wider py-3 px-3">uptime</th>
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-[var(--aw-border-subtle)]">
+                <th className="text-left font-mono text-[10px] font-medium text-[var(--aw-text-muted)] uppercase tracking-[0.08em] py-3 px-3.5">pid</th>
+                <th className="text-left font-mono text-[10px] font-medium text-[var(--aw-text-muted)] uppercase tracking-[0.08em] py-3 px-3.5">agent</th>
+                <th className="text-left font-mono text-[10px] font-medium text-[var(--aw-text-muted)] uppercase tracking-[0.08em] py-3 px-3.5">status</th>
+                <th className="text-left font-mono text-[10px] font-medium text-[var(--aw-text-muted)] uppercase tracking-[0.08em] py-3 px-3.5">uptime</th>
+              </tr>
+            </thead>
+            <tbody>
+              {instances.map((inst) => (
+                <tr key={inst.id} className="border-b border-[rgba(0,0,0,0.03)] dark:border-[rgba(255,255,255,0.03)] hover:bg-[rgba(0,0,0,0.02)] dark:hover:bg-[rgba(255,255,255,0.02)] transition-colors">
+                  <td className="py-3 px-3.5">
+                    <span className="font-mono text-xs text-[var(--aw-text-muted)] bg-[var(--aw-bg-deep)] px-2 py-[3px] rounded">
+                      {inst.pid}
+                    </span>
+                  </td>
+                  <td className="py-3 px-3.5">
+                    <span className={`font-mono text-[11px] px-2.5 py-1 rounded font-medium ${
+                      inst.agentType === 'claude'
+                        ? 'bg-blue-500/10 text-blue-400'
+                        : 'bg-emerald-500/10 text-emerald-400'
+                    }`}>
+                      {inst.agentType}
+                    </span>
+                  </td>
+                  <td className="py-3 px-3.5">
+                    <span className={`inline-flex items-center gap-1.5 font-mono text-[11px] font-medium px-3 py-1 rounded-[20px] ${
+                      inst.state === AgentState.Running
+                        ? 'bg-blue-500/10 text-blue-400'
+                        : inst.state === AgentState.Finished
+                        ? 'bg-emerald-500/10 text-emerald-400'
+                        : 'bg-red-500/10 text-red-400'
+                    }`}>
+                      <span className={`w-[5px] h-[5px] rounded-full ${
+                        inst.state === AgentState.Running ? 'bg-blue-400 animate-pulse' : 'bg-current'
+                      }`} />
+                      {STATE_LABELS[inst.state]}
+                    </span>
+                  </td>
+                  <td className="py-3 px-3.5 font-mono text-xs text-[var(--aw-text-muted)]">
+                    <ElapsedTime startTime={inst.startTime} />
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {instances.map((inst) => (
-                  <tr key={inst.id} className="border-b border-white/[0.03] hover:bg-white/[0.02]">
-                    <td className="py-2.5 px-3">
-                      <span className="font-mono text-xs text-gray-500 bg-[#050506] px-2 py-0.5 rounded">
-                        {inst.pid}
-                      </span>
-                    </td>
-                    <td className="py-2.5 px-3">
-                      <span className={`font-mono text-[11px] px-2 py-0.5 rounded font-medium ${
-                        inst.agentType === 'claude'
-                          ? 'bg-blue-500/10 text-blue-400'
-                          : 'bg-green-500/10 text-green-400'
-                      }`}>
-                        {inst.agentType}
-                      </span>
-                    </td>
-                    <td className="py-2.5 px-3">
-                      <span className={`inline-flex items-center gap-1.5 font-mono text-[11px] font-medium px-2.5 py-0.5 rounded-full ${
-                        inst.state === AgentState.Running
-                          ? 'bg-blue-500/10 text-blue-400'
-                          : inst.state === AgentState.Finished
-                          ? 'bg-green-500/10 text-green-400'
-                          : 'bg-red-500/10 text-red-400'
-                      }`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${
-                          inst.state === AgentState.Running ? 'bg-blue-400 animate-pulse' : 'bg-current'
-                        }`} />
-                        {STATE_LABELS[inst.state]}
-                      </span>
-                    </td>
-                    <td className="py-2.5 px-3 font-mono text-xs text-gray-500">
-                      <ElapsedTime startTime={inst.startTime} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </>
-        )}
-      </div>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 }

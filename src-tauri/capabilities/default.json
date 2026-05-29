@@ -11,6 +11,8 @@
     "core:default",
     "notification:default",
     "core:window:allow-set-size",
-    "core:window:allow-start-dragging"
+    "core:window:allow-start-dragging",
+    "core:window:allow-hide",
+    "core:window:allow-show"
   ]
 }

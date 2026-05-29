@@ -52,7 +52,7 @@ export async function loadInitialConfig(): Promise<void> {
     const { invoke } = await import('@tauri-apps/api/core');
     const raw = await invoke<string>('load_config');
     const saved = JSON.parse(raw);
-    const merged: AppConfig = { ...DEFAULT_CONFIG, ...saved, configVersion: DEFAULT_CONFIG.configVersion };
+    const merged: AppConfig = { ...DEFAULT_CONFIG, ...saved, configVersion: DEFAULT_CONFIG.configVersion, agents: DEFAULT_CONFIG.agents };
     useConfigStore.getState().setConfig(merged);
   } catch {
     // No saved config or error -- use defaults already in store
