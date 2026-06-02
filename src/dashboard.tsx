@@ -16,6 +16,7 @@ function DashboardApp() {
   useEffect(() => {
     let unlisten1: (() => void) | undefined;
     let unlisten2: (() => void) | undefined;
+    let unlisten3: (() => void) | undefined;
 
     async function setupListener() {
       unlisten1 = await listen<{ instances: Record<string, AgentInstance>; summaries: AgentSummary[] }>(
@@ -34,11 +35,15 @@ function DashboardApp() {
         },
       );
 
+      unlisten3 = await listen('tray-open-settings', () => {
+        useUIStore.getState().setSettingsOpen(true);
+      });
+
       emit('request-sync').catch(() => {});
     }
 
     setupListener().catch(() => {});
-    return () => { unlisten1?.(); unlisten2?.(); };
+    return () => { unlisten1?.(); unlisten2?.(); unlisten3?.(); };
   }, []);
 
   // Emit config changes to main window for persistence and widget sync

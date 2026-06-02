@@ -169,7 +169,7 @@ function ContextMenu({ x, y, onClose }: { x: number; y: number; onClose: () => v
     { label: '---', action: () => {} },
     { label: 'Dashboard', action: () => { openDashboard(); onClose(); } },
     { label: '---', action: () => {} },
-    { label: 'Quit', action: () => { getCurrentWindow().hide().catch(() => {}); } },
+    { label: 'Hide Widget', action: () => { invoke('set_widget_visible', { visible: false }).catch(() => {}); onClose(); } },
   ];
 
   return (
