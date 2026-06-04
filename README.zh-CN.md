@@ -44,7 +44,7 @@ AgentWatch 不是 Agent 控制器、调度器或编排平台。它不会替你�
 
 ## 截图
 
-MVP 界面稳定后会补充截图。
+![AgentWatch dashboard](./assets/screenshot-dashboard.png)
 
 ## 技术栈
 

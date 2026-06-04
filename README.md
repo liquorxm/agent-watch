@@ -53,7 +53,7 @@ Planned exploration:
 
 ## Screenshots
 
-Screenshots will be added as the MVP interface stabilizes.
+![AgentWatch dashboard](./assets/screenshot-dashboard.png)
 
 ## Tech Stack
 
